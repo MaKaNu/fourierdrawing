@@ -4,6 +4,7 @@
     implements following functions:
 
     - load_data
+    - normalize
     - _load_data_from_csv
     - _load_rabbit
     - _load_ellipse
@@ -52,6 +53,24 @@ def load_data(dataset="rabbit") -> List[List[float]]:
             "Dataset is not correctly formatted. Check README for instruction."
         )
     return data
+
+
+def normalize(point_array: np.ndarray, min_v=-1, max_v=1) -> np.ndarray:
+    """_summary_
+
+    Args:
+        point_array (np.ndarray): _description_
+        min_v (int, optional): _description_. Defaults to -1.
+        max_v (int, optional): _description_. Defaults to 1.
+
+    Returns:
+        np.ndarray: _description_
+    """
+    x = point_array[:, 0]
+    y = point_array[:, 1]
+    x_norm = (max_v - min_v) * ((x - x.min()) / (x.max() - x.min())) + min_v
+    y_norm = (max_v - min_v) * ((y - y.min()) / (y.max() - y.min())) + min_v
+    return np.array([x_norm, y_norm]).T
 
 
 def _load_data_from_json(dataset):
