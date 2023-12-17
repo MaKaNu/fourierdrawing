@@ -68,7 +68,7 @@ def calc_components(point_array: np.ndarray, num_components: int) -> np.ndarray:
     if not num_components % 2 == 0:
         raise ValueError("num_components should be even!")
     comps = [calc_components_freq(point_array, freq=0)]
-    for n in range(1, num_components // 2):
+    for n in range(1, num_components // 2 + 1):
         comps.append(calc_components_freq(point_array, freq=n))
         comps.append(calc_components_freq(point_array, freq=-n))
     return np.array(comps)
