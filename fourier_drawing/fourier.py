@@ -1,3 +1,14 @@
+"""Fourier Module.
+    The fourier module provides functions to calculatee fourier series components.
+    
+    implements following functions:
+
+    - normalize
+    - calc_components_freq
+    - calc_components
+    - cartesian2polar
+    - calc_n_fourier_components
+"""
 import numpy as np
 
 
