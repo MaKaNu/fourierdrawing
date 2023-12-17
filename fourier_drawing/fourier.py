@@ -1,6 +1,5 @@
 import numpy as np
-
-
+from scipy.interpolate import interp1d
 def normalize(point_array: np.ndarray, min_v=-1, max_v=1) -> np.ndarray:
     """_summary_
 
@@ -31,13 +30,50 @@ def calc_components_freq(point_array: np.ndarray, freq: int) -> np.complex128:
     """
     integral = []
     num_points = point_array.shape[0]
-    for t in range(num_points):
+    dt = 1/num_points
+    for t in range(0, num_points):
         p_cmp = complex(point_array[t, 0], point_array[t, 1])
-        integral.append(
-            p_cmp * np.exp(-freq * 2 * np.pi * 1j * t / num_points) / num_points
-        )
+
+        bla = p_cmp * np.exp(-freq * 2 * np.pi * 1j *t/num_points) * dt
+        integral.append(bla)
+
+  #  tmp = np.array([np.array(integral).real, np.array(integral).imag]).T
+   # arc_len = arc_length(tmp)
+    #print(arc_len)
+    #complex_sum = sum(integral)
+    #complex_sum_polar = cartesian2polar(complex_sum)
+    #complex_sum_polar_scaled = [np.divide(complex_sum_polar[0], arc_len),complex_sum_polar[1]]
+    #output = complex(complex_sum_polar_scaled[0],complex_sum_polar_scaled[1]/360*2*np.pi)
     return sum(integral)
 
+
+def arc_length(points_array, num_points=100):
+    x=points_array[:,0]
+    y=points_array[:,1]
+
+    # Ensure that the points are in the correct order
+    sorted_indices = np.argsort(x)
+    x = x[sorted_indices]
+    y = y[sorted_indices]
+
+    # Linear interpolation
+    interp_func = interp1d(x, y, kind='linear')
+
+    # Create a finely spaced set of points along the curve
+    x_interp = np.linspace(x.min(), x.max(), num_points)
+    y_interp = interp_func(x_interp)
+
+    # Calculate the distances between consecutive points
+    dx = np.diff(x_interp)
+    dy = np.diff(y_interp)
+
+    # Calculate the arc length using the Pythagorean theorem
+    arc_lengths = np.sqrt(dx**2 + dy**2)
+
+    # Sum up the arc lengths
+    total_arc_length = np.sum(arc_lengths)
+
+    return total_arc_length
 
 def calc_components(point_array: np.ndarray, num_components: int) -> np.ndarray:
     """_summary_
@@ -55,7 +91,7 @@ def calc_components(point_array: np.ndarray, num_components: int) -> np.ndarray:
     if not num_components % 2 == 0:
         raise ValueError("num_components should be even!")
     comps = [calc_components_freq(point_array, freq=0)]
-    for n in range(1, num_components // 2):
+    for n in range(1, (num_components // 2)+1):
         comps.append(calc_components_freq(point_array, freq=n))
         comps.append(calc_components_freq(point_array, freq=-n))
     return np.array(comps)
@@ -77,7 +113,7 @@ def cartesian2polar(
     return np.array([magnitude, angles]).T
 
 
-def main():
+def get_rabbit():
     data = np.array(
         [
             [591.7699890136719, 329.3479919433594],
@@ -182,11 +218,84 @@ def main():
             [525.6879577636719, 299.36785888671875],
         ]
     )
+    return data
 
-    normalized_data = normalize(data)
-    new_data = calc_components(normalized_data, 6)
-    value = cartesian2polar(new_data)
-
-
-if __name__ == "__main__":
-    main()
+def get_rabbit2():
+    data = np.array(
+        [
+            [591.7699890136719, 329.3479919433594],
+            [573.8238677978516, 302.8184585571289],
+            [553.2171783447266, 278.2467803955078],
+            [531.2021331787109, 254.92733764648438],
+            [507.4439697265625, 233.4050064086914],
+            [495.7383117675781, 210.3707733154297],
+            [499.9385681152344, 178.6180076599121],
+            [498.18341064453125, 146.64281463623047],
+            [489.5765838623047, 115.82509422302246],
+            [473.2870178222656, 88.32209205627441],
+            [450.70013427734375, 85.84137344360352],
+            [433.9762420654297, 113.09134674072266],
+            [424.64459228515625, 143.7001495361328],
+            [422.1361846923828, 175.62327194213867],
+            [425.6429748535156, 207.46001434326172],
+            [415.3757019042969, 218.6624526977539],
+            [405.14898681640625, 188.30846405029297],
+            [389.58319091796875, 160.31619262695312],
+            [368.8749465942383, 135.903564453125],
+            [343.02933502197266, 117.06257247924805],
+            [312.95423889160156, 106.33516120910645],
+            [305.28285217285156, 133.94140625],
+            [309.27569580078125, 165.6783447265625],
+            [320.6389923095703, 195.60313415527344],
+            [337.77306365966797, 222.66282653808594],
+            [359.5541687011719, 246.1480484008789],
+            [379.2557678222656, 267.4534454345703],
+            [357.7966995239258, 263.62903594970703],
+            [328.8069152832031, 249.99008178710938],
+            [298.00154876708984, 241.17941284179688],
+            [266.1994934082031, 237.260498046875],
+            [234.16905975341797, 238.18577575683594],
+            [202.65435409545898, 243.97554779052734],
+            [172.4437599182129, 254.64627075195312],
+            [144.37926483154297, 270.0970993041992],
+            [119.37139511108398, 290.1146697998047],
+            [98.41934585571289, 314.33670806884766],
+            [81.36497688293457, 338.30123138427734],
+            [52.28910446166992, 344.1581344604492],
+            [49.826026916503906, 374.0392532348633],
+            [68.9356632232666, 392.98453521728516],
+            [65.92932605743408, 424.8849639892578],
+            [65.40990734100342, 456.94920349121094],
+            [67.37814521789551, 488.95196533203125],
+            [73.17794799804688, 520.4635467529297],
+            [86.29299736022949, 549.5435333251953],
+            [112.8403491973877, 565.7662200927734],
+            [144.9057846069336, 566],
+            [176.9799346923828, 566],
+            [209.05391311645508, 566],
+            [241.12866973876953, 566],
+            [273.2029342651367, 566],
+            [301.5389633178711, 562.5301971435547],
+            [319.5755157470703, 555.4964752197266],
+            [348.32518005371094, 545.2305755615234],
+            [375.54895782470703, 528.3436737060547],
+            [399.4787826538086, 507.0485534667969],
+            [420.65362548828125, 523.2336120605469],
+            [441.7372589111328, 547.4042663574219],
+            [465.3560791015625, 566],
+            [497.43162536621094, 566],
+            [529.5061645507812, 566],
+            [519.7122650146484, 537.7205505371094],
+            [489.1353454589844, 529.4800262451172],
+            [474.64625549316406, 508.53033447265625],
+            [487.29005432128906, 483.9589080810547],
+            [506.1493225097656, 458.216796875],
+            [515.4617004394531, 427.66221618652344],
+            [515.7876739501953, 395.6822738647461],
+            [537.9475555419922, 384.6746368408203],
+            [567.5895843505859, 372.7527770996094],
+            [590.4958953857422, 350.8195114135742],
+            [591.7699890136719, 329.3479919433594],
+        ]
+    )
+    return data

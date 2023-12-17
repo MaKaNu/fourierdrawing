@@ -11,6 +11,7 @@ python = "^3.10"
 ipykernel = "^6.27.1"
 matplotlib = "^3.8.2"
 exceptiongroup = "^1.2.0"
+scipy = "^1.11.4"
 
 
 [tool.poetry.group.dev.dependencies]
