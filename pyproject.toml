@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "fourierdrawing"
+version = "0.1.0"
+description = "An implementation of 3B1B fourier drawing style https://www.youtube.com/watch?v=-qgreAUpPwM"
+authors = ["MaKaNu <matti.kaupenjohann@fh-dortmund.de>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+ipykernel = "^6.27.1"
+matplotlib = "^3.8.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
