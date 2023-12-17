@@ -94,7 +94,7 @@ def _load_data_from_json(dataset):
     dataset_path = Path(f"data/{dataset}").with_suffix(".json")
     with open(dataset_path, "r", encoding="utf-8") as file:
         data = json.load(file)
-    return data
+    return np.array(data)
 
 
 def _load_rabbit():

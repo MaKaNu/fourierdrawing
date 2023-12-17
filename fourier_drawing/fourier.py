@@ -56,12 +56,12 @@ def calc_components(point_array: np.ndarray, num_components: int) -> np.ndarray:
 
 
 def calc_n_fourier_components(
-    point_array: List[List[float]], n=100, normal=True
+    point_array: np.ndarray, n=100, normal=True
 ) -> np.ndarray:
     """calculate number n fourier set components
 
     Args:
-        point_array (List[List[float]]): provides the datapoints as nested lists
+        point_array (np.ndarray): provides the datapoints as nested lists
         n (int, optional): number of calculated components plus constant. Defaults to 100.
         normal (bool, optional): defines if the data should be normalized. Defaults to True.
 
