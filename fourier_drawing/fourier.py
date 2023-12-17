@@ -3,33 +3,14 @@
     
     implements following functions:
 
-    - normalize
     - calc_components_freq
     - calc_components
-    - cartesian2polar
     - calc_n_fourier_components
 """
+from typing import List
 import numpy as np
 
-from fourier_drawing.data import load_data
-
-
-def normalize(point_array: np.ndarray, min_v=-1, max_v=1) -> np.ndarray:
-    """_summary_
-
-    Args:
-        point_array (np.ndarray): _description_
-        min_v (int, optional): _description_. Defaults to -1.
-        max_v (int, optional): _description_. Defaults to 1.
-
-    Returns:
-        np.ndarray: _description_
-    """
-    x = point_array[:, 0]
-    y = point_array[:, 1]
-    x_norm = (max_v - min_v) * ((x - x.min()) / (x.max() - x.min())) + min_v
-    y_norm = (max_v - min_v) * ((y - y.min()) / (y.max() - y.min())) + min_v
-    return np.array([x_norm, y_norm]).T
+from fourier_drawing.data import load_data, normalize, cartesian2polar
 
 
 def calc_components_freq(point_array: np.ndarray, freq: int) -> np.complex128:
@@ -74,32 +55,19 @@ def calc_components(point_array: np.ndarray, num_components: int) -> np.ndarray:
     return np.array(comps)
 
 
-def cartesian2polar(
-    points: np.complex128 | np.ndarray,
-) -> np.ndarray[np.float64]:
-    """_summary_
+def calc_n_fourier_components(
+    point_array: List[List[float]], n=100, normal=True
+) -> np.ndarray:
+    """calculate number n fourier set components
 
     Args:
-        points (np.complex128 | np.ndarray): _description_
+        point_array (List[List[float]]): provides the datapoints as nested lists
+        n (int, optional): number of calculated components plus constant. Defaults to 100.
+        normal (bool, optional): defines if the data should be normalized. Defaults to True.
 
     Returns:
-        np.ndarray[np.float64]: _description_
+        np.ndarray: Array of polar coordinates for n components
     """
-    magnitude = np.abs(points)
-    angles = np.angle(points, deg=True)
-    return np.array([magnitude, angles]).T
-
-
-def calc_n_fourier_components(dataset="rabbit", n=100, normal=True):
-    """_summary_
-
-    Args:
-        n (int, optional): _description_. Defaults to 100.
-
-    Returns:
-        _type_: _description_
-    """
-    point_array = load_data(dataset)
     if normal:
         point_array = normalize(point_array)
     cartesian_components = calc_components(point_array, n)
@@ -107,4 +75,5 @@ def calc_n_fourier_components(dataset="rabbit", n=100, normal=True):
 
 
 if __name__ == "__main__":
-    calc_n_fourier_components(dataset="ellipse")
+    data = load_data("rabbit")
+    calc_n_fourier_components(data)

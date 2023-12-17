@@ -5,6 +5,7 @@
 
     - load_data
     - normalize
+    - cartesian2polar
     - _load_data_from_csv
     - _load_rabbit
     - _load_ellipse
@@ -71,6 +72,22 @@ def normalize(point_array: np.ndarray, min_v=-1, max_v=1) -> np.ndarray:
     x_norm = (max_v - min_v) * ((x - x.min()) / (x.max() - x.min())) + min_v
     y_norm = (max_v - min_v) * ((y - y.min()) / (y.max() - y.min())) + min_v
     return np.array([x_norm, y_norm]).T
+
+
+def cartesian2polar(
+    points: np.complex128 | np.ndarray,
+) -> np.ndarray[np.float64]:
+    """_summary_
+
+    Args:
+        points (np.complex128 | np.ndarray): _description_
+
+    Returns:
+        np.ndarray[np.float64]: _description_
+    """
+    magnitude = np.abs(points)
+    angles = np.angle(points, deg=True)
+    return np.array([magnitude, angles]).T
 
 
 def _load_data_from_json(dataset):
